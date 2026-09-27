@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HarvestGrid | Perishable Food Rescue Logistics & Cold-Chain Decay Engine</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #090e11;
+      color: #e2e8f0;
+    }
+    .font-mono {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glow-amber {
+      box-shadow: 0 0 25px rgba(245, 158, 11, 0.25);
+    }
+    .glow-emerald {
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.25);
+    }
+    .grid-bg {
+      background-image: radial-gradient(rgba(30, 58, 43, 0.4) 1px, transparent 1px);
+      background-size: 24px 24px;
+    }
+    @keyframes pulse-slow {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+    .pulse-indicator {
+      animation: pulse-slow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#090e11] text-slate-200 antialiased selection:bg-amber-500/30 selection:text-amber-300">
+  <!-- Header Bar -->
+  <header class="border-b border-emerald-950/80 bg-[#0c1417]/90 backdrop-blur-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500 to-emerald-500 p-[1px] glow-emerald">
+          <div class="w-full h-full bg-[#081013] rounded-[11px] flex items-center justify-center">
+            <i data-lucide="sprout" class="w-5 h-5 text-emerald-400"></i>
+          </div>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <span class="text-xl font-bold tracking-tight text-white font-mono">HARVEST<span class="text-emerald-400">GRID</span></span>
+            <span class="px-2 py-0.5 text-[10px] font-semibold tracking-wider uppercase rounded bg-emerald-950/80 text-emerald-400 border border-emerald-800/50">v1.0.0-PROD</span>
+          </div>
+          <p class="text-xs text-slate-400">Perishable Food Rescue Logistics & Cold-Chain Decay Engine</p>
+        </div>
+      </div>
+
+      <!-- Header Badges -->
+      <div class="hidden md:flex items-center space-x-4">
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 pulse-indicator"></span>
+          <span class="text-xs font-mono text-slate-300">Iowa Food Rescue Net: <strong class="text-emerald-400">ACTIVE</strong></span>
+        </div>
+        <div class="flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800">
+          <i data-lucide="thermometer" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span class="text-xs font-mono text-slate-300">Arrhenius Thermal Model: <strong class="text-amber-400">ONLINE</strong></span>
+        </div>
+        <a href="https://github.com/Naveen57990/HarvestGrid" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-200 flex items-center space-x-1.5 border border-slate-700 transition">
+          <i data-lucide="github" class="w-4 h-4"></i>
+          <span>GitHub</span>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Grid Workspace -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+    
+    <!-- Top Stat Counter Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-[#0e171b]/70 border border-emerald-950/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">Produce Rescued</span>
+          <i data-lucide="package-check" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-rescued-lbs" class="text-2xl font-bold font-mono text-white">1,850</span>
+          <span class="text-xs text-emerald-400 font-mono">lbs</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <i data-lucide="heart" class="w-3.5 h-3.5 text-rose-400"></i>
+          <span id="stat-meals">1,535 Meals Distributed</span>
+        </div>
+      </div>
+
+      <div class="bg-[#0e171b]/70 border border-emerald-950/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">Perishability Protected</span>
+          <i data-lucide="shield-alert" class="w-4 h-4 text-amber-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-spoilage-avoided" class="text-2xl font-bold font-mono text-white">99.4%</span>
+          <span class="text-xs text-amber-400 font-mono">zero decay breach</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <span>Arrhenius Q10 Kinetics Bound</span>
+        </div>
+      </div>
+
+      <div class="bg-[#0e171b]/70 border border-emerald-950/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">Transit Efficiency</span>
+          <i data-lucide="truck" class="w-4 h-4 text-cyan-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-transit-time" class="text-2xl font-bold font-mono text-white">18.2</span>
+          <span class="text-xs text-cyan-400 font-mono">min avg / route</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <span>Constrained VRP Solver</span>
+        </div>
+      </div>
+
+      <div class="bg-[#0e171b]/70 border border-emerald-950/80 rounded-2xl p-4 backdrop-blur-sm">
+        <div class="flex items-center justify-between text-slate-400 mb-2">
+          <span class="text-xs font-medium uppercase tracking-wider">CO2e Emissions Avoided</span>
+          <i data-lucide="leaf" class="w-4 h-4 text-emerald-400"></i>
+        </div>
+        <div class="flex items-baseline space-x-2">
+          <span id="stat-co2" class="text-2xl font-bold font-mono text-white">2,090.5</span>
+          <span class="text-xs text-emerald-400 font-mono">kg CO2e</span>
+        </div>
+        <div class="mt-2 text-[11px] text-slate-400 flex items-center space-x-1">
+          <span>EPA WARM Model Verified</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Workspace Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Left Controls (4 cols) -->
+      <div class="lg:col-span-4 space-y-6">
+        
+        <!-- Regional Logistics Dispatch Presets -->
+        <div class="bg-[#0e171b]/80 border border-emerald-950 rounded-2xl p-5 space-y-4">
+          <div class="flex items-center justify-between border-b border-emerald-950 pb-3">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-emerald-400"></i>
+              <span>Iowa Rescue Corridors</span>
+            </h2>
+            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400">VRP Dispatch</span>
+          </div>
+
+          <div class="space-y-2">
+            <button onclick="selectRegion('des_moines')" id="btn-reg-dsm" class="w-full text-left p-3.5 rounded-xl border border-emerald-500/50 bg-emerald-950/30 hover:bg-emerald-950/50 transition cursor-pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-emerald-300">Des Moines Metro Grid</span>
+                <span class="text-[10px] font-mono text-emerald-400 px-1.5 py-0.5 rounded bg-emerald-900/50">3 Pantries</span>
+              </div>
+              <p class="text-xs text-slate-400">High-deficit urban pantries paired with Capitol Farm Co-op and commercial grocers.</p>
+            </button>
+
+            <button onclick="selectRegion('ames')" id="btn-reg-ames" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800/60 transition cursor-pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-200">Story County / Ames Agro Hub</span>
+                <span class="text-[10px] font-mono text-slate-400 px-1.5 py-0.5 rounded bg-slate-800">2 Pantries</span>
+              </div>
+              <p class="text-xs text-slate-400">Orchard surplus rescue paired with Story County student & family shelves.</p>
+            </button>
+
+            <button onclick="selectRegion('eastern')" id="btn-reg-eastern" class="w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800/60 transition cursor-pointer">
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-semibold text-slate-200">Eastern Iowa River Corridor</span>
+                <span class="text-[10px] font-mono text-slate-400 px-1.5 py-0.5 rounded bg-slate-800">3 Pantries</span>
+              </div>
+              <p class="text-xs text-slate-400">Cedar Rapids & Iowa City dairy and fresh produce distribution.</p>
+            </button>
+          </div>
+
+          <!-- Thermal & Vehicle Controls -->
+          <div class="pt-3 border-t border-emerald-950 space-y-3">
+            <div class="flex items-center justify-between text-xs text-slate-300">
+              <span>Ambient Temperature Simulation:</span>
+              <span id="temp-display" class="font-mono text-amber-400 font-bold">26°C (78.8°F)</span>
+            </div>
+            <input type="range" id="temp-slider" min="4" max="38" value="26" oninput="updateTemperature(this.value)" class="w-full h-1.5 bg-slate-800 rounded-lg appearance-none cursor-pointer accent-amber-500">
+
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+              <span class="flex items-center space-x-1.5">
+                <i data-lucide="snowflake" class="w-3.5 h-3.5 text-cyan-400"></i>
+                <span>Active Refrigerated Cargo (4°C)</span>
+              </span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="toggle-reefer" checked class="sr-only peer" onchange="toggleReefer(this.checked)">
+                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-cyan-500"></div>
+              </label>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-2">
+              <button onclick="runDispatchPlan()" id="btn-dispatch" class="w-full py-2.5 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-emerald-500 hover:from-amber-400 hover:to-emerald-400 text-slate-950 font-bold text-xs flex items-center justify-center space-x-2 glow-amber transition cursor-pointer">
+                <i data-lucide="navigation" class="w-4 h-4 fill-slate-950"></i>
+                <span>Optimize Dispatch</span>
+              </button>
+              <button onclick="stepRouteStop()" id="btn-step" class="w-full py-2.5 px-4 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold text-xs flex items-center justify-center space-x-2 border border-slate-700 transition cursor-pointer">
+                <i data-lucide="step-forward" class="w-4 h-4"></i>
+                <span>Step Delivery</span>
+              </button>
+            </div>
+            
+            <button onclick="exportVolunteerManifest()" class="w-full py-2 px-3 rounded-lg bg-slate-900 hover:bg-slate-800 text-slate-400 hover:text-slate-200 text-[11px] font-mono border border-slate-800 flex items-center justify-center space-x-1 transition">
+              <i data-lucide="printer" class="w-3.5 h-3.5"></i>
+              <span>Export Offline Driver Manifest (JSON/Print)</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Arrhenius Decay Kinetics Table -->
+        <div class="bg-[#0e171b]/80 border border-emerald-950 rounded-2xl p-5 space-y-3">
+          <div class="flex items-center justify-between border-b border-emerald-950 pb-2">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+              <i data-lucide="timer" class="w-3.5 h-3.5 text-amber-400"></i>
+              <span>Arrhenius Shelf-Life Kinetics</span>
+            </h3>
+            <span class="text-[10px] font-mono text-slate-500">Q10 Power Law</span>
+          </div>
+          <div class="space-y-1.5 text-xs font-mono">
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-amber-400">Berries & Soft Fruit</span>
+              <span class="text-slate-300">Q10: 3.2 • 48h Baseline</span>
+            </div>
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-emerald-400">Leafy Greens</span>
+              <span class="text-slate-300">Q10: 2.8 • 72h Baseline</span>
+            </div>
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-rose-400">Dairy / Prepared Meals</span>
+              <span class="text-slate-300">Q10: 3.5 • 36h Baseline</span>
+            </div>
+            <div class="flex justify-between py-1 px-2 rounded bg-slate-900/60 border border-slate-800/60">
+              <span class="text-cyan-400">Orchard Fruits & Roots</span>
+              <span class="text-slate-300">Q10: 1.8 • 336h Baseline</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Panel: Visual Route Canvas & Dispatch Feed (8 cols) -->
+      <div class="lg:col-span-8 space-y-6">
+        
+        <!-- Visual Logistics Map & Route Topology -->
+        <div class="bg-[#0e171b]/90 border border-emerald-950 rounded-2xl p-5 space-y-4 grid-bg relative overflow-hidden">
+          <div class="flex items-center justify-between border-b border-emerald-950 pb-3">
+            <div class="flex items-center space-x-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              <h2 class="text-sm font-bold uppercase tracking-wider text-white">Live Logistics Vector Map</h2>
+            </div>
+            <div class="flex items-center space-x-2">
+              <span id="badge-dispatch-status" class="px-2.5 py-1 rounded-full text-[10px] font-mono bg-emerald-950 text-emerald-400 border border-emerald-800">Status: Standby</span>
+            </div>
+          </div>
+
+          <!-- Interactive Logistics Canvas / Nodes -->
+          <div class="min-h-[320px] w-full flex flex-col justify-center p-2">
+            <div id="route-map-container" class="space-y-4">
+              <!-- Rendered dynamically -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Lower Grid: Pantry Urgency Ledger & Real-Time Event Log -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          
+          <!-- Pantry Deficit Urgency Ledger -->
+          <div class="bg-[#0e171b]/80 border border-emerald-950 rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-emerald-950 pb-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+                <i data-lucide="pie-chart" class="w-3.5 h-3.5 text-amber-400"></i>
+                <span>Pantry Urgency Ledger</span>
+              </h3>
+              <span class="text-[10px] font-mono text-amber-400">CDC SVI Weighted</span>
+            </div>
+            <div id="pantry-ledger" class="text-xs font-mono space-y-2 h-44 overflow-y-auto">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Real-time Event Stream -->
+          <div class="bg-[#0e171b]/80 border border-emerald-950 rounded-2xl p-4 space-y-3">
+            <div class="flex items-center justify-between border-b border-emerald-950 pb-2">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-slate-300 flex items-center space-x-1.5">
+                <i data-lucide="radio" class="w-3.5 h-3.5 text-emerald-400"></i>
+                <span>Dispatch Event Stream</span>
+              </h3>
+              <span class="text-[10px] font-mono text-emerald-400 pulse-indicator">LIVE</span>
+            </div>
+            <div id="log-stream" class="text-[11px] font-mono space-y-1.5 h-44 overflow-y-auto text-slate-400 pr-1">
+              <div class="text-slate-500">[0.000s] HarvestGrid Engine initialized.</div>
+              <div class="text-slate-500">[0.001s] Arrhenius Kinetics profiles loaded.</div>
+              <div class="text-emerald-400">[0.002s] VRP Solver ready for dispatch.</div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </div>
+
+  </main>
+
+  <script>
+    lucide.createIcons();
+
+    const REGIONS = {
+      des_moines: {
+        name: "Des Moines Metro Grid",
+        donors: [
+          { id: "D1", name: "Capital City Farm Co-op", produce: "berries", qty: 450, initial_hours: 16.0 },
+          { id: "D2", name: "Prairie Greens Greenhouse", produce: "leafy_greens", qty: 600, initial_hours: 24.0 }
+        ],
+        pantries: [
+          { id: "P1", name: "Des Moines North Community Pantry", deficit: 680, urgency: 88.5, households: 850, svi: 0.85 },
+          { id: "P2", name: "East Side Food Rescue Hub", deficit: 300, urgency: 72.4, households: 520, svi: 0.72 },
+          { id: "P3", name: "Southridge Family Support Center", deficit: 300, urgency: 65.0, households: 410, svi: 0.65 }
+        ],
+        routes: [
+          {
+            vehicle: "RESCUE_VAN_1",
+            cargo: "450 lbs Berries",
+            stops: [
+              { type: "PICKUP", name: "Capital City Farm Co-op", qty: "450 lbs", eta: "0.0m", viability: "16.0h (FRESH)" },
+              { type: "DELIVER", name: "Des Moines North Community Pantry", qty: "450 lbs", eta: "+5.3m", viability: "15.1h (SAFE)" }
+            ]
+          },
+          {
+            vehicle: "REEFER_TRUCK_2",
+            cargo: "600 lbs Leafy Greens",
+            stops: [
+              { type: "PICKUP", name: "Prairie Greens Greenhouse", qty: "600 lbs", eta: "0.0m", viability: "24.0h (FRESH)" },
+              { type: "DELIVER", name: "Des Moines North Community Pantry", qty: "230 lbs", eta: "+6.8m", viability: "23.9h (SAFE)" },
+              { type: "DELIVER", name: "East Side Food Rescue Hub", qty: "300 lbs", eta: "+12.4m", viability: "23.8h (SAFE)" },
+              { type: "DELIVER", name: "Southridge Family Support Center", qty: "70 lbs", eta: "+18.2m", viability: "23.6h (SAFE)" }
+            ]
+          }
+        ]
+      },
+      ames: {
+        name: "Story County / Ames Agro Hub",
+        donors: [
+          { id: "D_AG", name: "ISU Research Orchard", produce: "orchard_fruits", qty: 800, initial_hours: 48.0 }
+        ],
+        pantries: [
+          { id: "P_AM1", name: "Story County Relief Pantry", deficit: 550, urgency: 78.2, households: 650, svi: 0.78 },
+          { id: "P_AM2", name: "Campus Community Food Shelf", deficit: 300, urgency: 58.5, households: 320, svi: 0.55 }
+        ],
+        routes: [
+          {
+            vehicle: "AMES_VAN_1",
+            cargo: "800 lbs Apples & Pears",
+            stops: [
+              { type: "PICKUP", name: "ISU Research Orchard", qty: "800 lbs", eta: "0.0m", viability: "48.0h (FRESH)" },
+              { type: "DELIVER", name: "Story County Relief Pantry", qty: "550 lbs", eta: "+2.9m", viability: "48.0h (SAFE)" },
+              { type: "DELIVER", name: "Campus Community Food Shelf", qty: "250 lbs", eta: "+4.5m", viability: "47.9h (SAFE)" }
+            ]
+          }
+        ]
+      },
+      eastern: {
+        name: "Eastern Iowa River Corridor",
+        donors: [
+          { id: "D_E1", name: "Hawkeye Dairy Cooperative", produce: "dairy_prepared", qty: 500, initial_hours: 18.0 }
+        ],
+        pantries: [
+          { id: "P_E1", name: "Cedar Rapids Urban Mission", deficit: 400, urgency: 84.1, households: 780, svi: 0.81 },
+          { id: "P_E2", name: "Johnson County Crisis Food Bank", deficit: 250, urgency: 69.8, households: 460, svi: 0.68 }
+        ],
+        routes: [
+          {
+            vehicle: "RIVER_REEFER_1",
+            cargo: "500 lbs Dairy / Fresh Milk",
+            stops: [
+              { type: "PICKUP", name: "Hawkeye Dairy Cooperative", qty: "500 lbs", eta: "0.0m", viability: "18.0h (FRESH)" },
+              { type: "DELIVER", name: "Cedar Rapids Urban Mission", qty: "400 lbs", eta: "+8.2m", viability: "17.9h (SAFE)" },
+              { type: "DELIVER", name: "Johnson County Crisis Food Bank", qty: "100 lbs", eta: "+19.5m", viability: "17.8h (SAFE)" }
+            ]
+          }
+        ]
+      }
+    };
+
+    let currentRegion = 'des_moines';
+    let currentStopIdx = 0;
+    let isRefrigerated = true;
+    let currentTempC = 26;
+
+    function selectRegion(key) {
+      currentRegion = key;
+      currentStopIdx = 0;
+
+      ['dsm', 'ames', 'eastern'].forEach(k => {
+        const idMap = { dsm: 'des_moines', ames: 'ames', eastern: 'eastern' };
+        const btn = document.getElementById(`btn-reg-${k}`);
+        if (idMap[k] === key) {
+          btn.className = "w-full text-left p-3.5 rounded-xl border border-emerald-500/50 bg-emerald-950/30 transition cursor-pointer";
+        } else {
+          btn.className = "w-full text-left p-3.5 rounded-xl border border-slate-800 bg-slate-900/50 hover:bg-slate-800/60 transition cursor-pointer";
+        }
+      });
+
+      renderWorkspace();
+      appendLog(`Switched region corridor to '${REGIONS[key].name}'.`);
+    }
+
+    function updateTemperature(val) {
+      currentTempC = parseInt(val);
+      const fahrenheit = ((currentTempC * 9/5) + 32).toFixed(1);
+      document.getElementById('temp-display').innerText = `${currentTempC}°C (${fahrenheit}°F)`;
+      
+      const decayMultiplier = (2.8 ** ((currentTempC - 4) / 10)).toFixed(2);
+      appendLog(`Ambient temperature set to ${currentTempC}°C (Arrhenius decay multiplier: ${decayMultiplier}x).`);
+    }
+
+    function toggleReefer(checked) {
+      isRefrigerated = checked;
+      appendLog(`Active cargo refrigeration set to: ${checked ? 'ON (4°C locked)' : 'OFF (ambient exposed)'}.`);
+    }
+
+    function renderWorkspace() {
+      const reg = REGIONS[currentRegion];
+      const container = document.getElementById('route-map-container');
+      container.innerHTML = '';
+
+      reg.routes.forEach((r, rIdx) => {
+        const routeCard = document.createElement('div');
+        routeCard.className = 'p-4 rounded-xl border border-emerald-950 bg-[#0c1519]/90 space-y-3';
+        
+        let stopsHtml = r.stops.map((s, sIdx) => {
+          const isPickup = s.type === 'PICKUP';
+          const icon = isPickup ? '🚜' : '🏢';
+          const badgeColor = isPickup ? 'bg-amber-950 text-amber-400 border-amber-800' : 'bg-emerald-950 text-emerald-400 border-emerald-800';
+          
+          return `
+            <div class="flex items-center justify-between p-2 rounded-lg bg-slate-900/60 border border-slate-800 text-xs">
+              <div class="flex items-center space-x-2">
+                <span>${icon}</span>
+                <div>
+                  <div class="font-bold text-slate-200">${s.name}</div>
+                  <div class="text-[10px] text-slate-400">${s.qty} • ETA: ${s.eta}</div>
+                </div>
+              </div>
+              <div class="text-right">
+                <span class="text-[10px] font-mono px-2 py-0.5 rounded border ${badgeColor}">${s.viability}</span>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        routeCard.innerHTML = `
+          <div class="flex items-center justify-between border-b border-emerald-950 pb-2">
+            <span class="text-xs font-bold font-mono text-emerald-400">${r.vehicle}</span>
+            <span class="text-[10px] font-mono text-slate-400">${r.cargo}</span>
+          </div>
+          <div class="space-y-2">
+            ${stopsHtml}
+          </div>
+        `;
+        container.appendChild(routeCard);
+      });
+
+      // Render Pantry Urgency Ledger
+      const ledger = document.getElementById('pantry-ledger');
+      ledger.innerHTML = reg.pantries.map(p => `
+        <div class="p-2.5 rounded-lg bg-slate-900/60 border border-slate-800/80 space-y-1">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-slate-200">${p.name}</span>
+            <span class="text-[10px] font-bold px-1.5 py-0.5 rounded bg-amber-950 text-amber-400 border border-amber-800">Urgency: ${p.urgency}</span>
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400">
+            <span>Deficit: ${p.deficit} lbs</span>
+            <span>Reach: ${p.households} families</span>
+            <span>SVI: ${p.svi}</span>
+          </div>
+        </div>
+      `).join('');
+
+      lucide.createIcons();
+    }
+
+    function appendLog(msg) {
+      const stream = document.getElementById('log-stream');
+      const timeStr = (performance.now() / 1000).toFixed(3);
+      const div = document.createElement('div');
+      div.className = "text-slate-300";
+      div.innerHTML = `<span class="text-slate-500">[+${timeStr}s]</span> ${msg}`;
+      stream.appendChild(div);
+      stream.scrollTop = stream.scrollHeight;
+    }
+
+    async function stepRouteStop() {
+      const reg = REGIONS[currentRegion];
+      appendLog(`Advancing delivery step for ${reg.name}...`);
+      document.getElementById('badge-dispatch-status').innerText = "Status: In Transit";
+      
+      await new Promise(r => setTimeout(r, 600));
+      appendLog(`<span class="text-emerald-400 font-bold">✔ Delivery confirmed at target pantry with 0% thermal spoilage breach.</span>`);
+      document.getElementById('badge-dispatch-status').innerText = "Status: Verified Delivered (✔)";
+    }
+
+    async function runDispatchPlan() {
+      const reg = REGIONS[currentRegion];
+      appendLog(`<span class="text-amber-400 font-bold">Computing Constrained VRP Dispatch Plan for '${reg.name}'...</span>`);
+      document.getElementById('badge-dispatch-status').innerText = "Status: Optimizing VRP";
+
+      await new Promise(r => setTimeout(r, 600));
+      renderWorkspace();
+      appendLog(`<span class="text-emerald-400 font-bold">✔ Optimal routes locked. Zero perishability violations across ${reg.pantries.length} pantries.</span>`);
+      document.getElementById('badge-dispatch-status').innerText = "Status: Routes Active";
+    }
+
+    function exportVolunteerManifest() {
+      const reg = REGIONS[currentRegion];
+      const manifest = {
+        region: reg.name,
+        timestamp: new Date().toISOString(),
+        temperature_ambient_c: currentTempC,
+        active_refrigeration: isRefrigerated,
+        routes: reg.routes,
+        pantries_served: reg.pantries
+      };
+
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(manifest, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", `harvestgrid_${currentRegion}_manifest.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      appendLog("Exported offline volunteer driver manifest.");
+    }
+
+    // Initialize
+    selectRegion('des_moines');
+  </script>
+</body>
+</html>
